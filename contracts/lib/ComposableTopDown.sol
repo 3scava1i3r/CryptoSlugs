@@ -9,6 +9,12 @@ import "https://github.com/mattlockyer/composables-998/blob/master/contracts/ERC
 import "https://github.com/mattlockyer/composables-998/blob/master/contracts/ERC721Receiver.sol";
 import "https://github.com/BitGuildPlatform/Contracts/blob/1a791edddf5cee70f002bba5ac73dbcf83550b4f/contracts/lib/Pausable.sol";
 
+
+//import "https://github.com/3scava1i3r/Old-OpenZepplin/blob/main/openzeppelin-contracts-2.5.0/contracts/token/ERC721/ERC721.sol";
+//import "https://github.com/3scava1i3r/Old-OpenZepplin/blob/main/openzeppelin-contracts-2.5.0/contracts/token/ERC721/IERC721Receiver.sol";
+//import "https://github.com/3scava1i3r/Old-OpenZepplin/blob/main/openzeppelin-contracts-2.5.0/contracts/lifecycle/Pausable.sol";
+
+
 interface ERC998ERC721TopDown {
     event ReceivedChild(address indexed _from, uint256 indexed _tokenId, address indexed _childContract, uint256 _childTokenId);
     event TransferChild(uint256 indexed tokenId, address indexed _to, address indexed _childContract, uint256 _childTokenId);

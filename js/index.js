@@ -2,10 +2,28 @@ const web3btn = document.getElementById("web3connect");
 const acc = document.getElementById("acc");
 const mintBtn = document.getElementById("mint-button");
 
+
 let selectedACC;
 let name;
+let randomNum;
+
+
 window.Moralis.initialize("t6bmeCXZOoZgO31r0vu9GfsvRt5bYeubGm5YPtsb");
 window.Moralis.serverURL = "https://3xvmpzlfisxr.moralisweb3.com:2053/server";
+
+
+
+const pinataApiKey = "a770d310d147135d5ec4";
+const pinataSecretApiKey =
+  "076b05a1c38c2910d32a8079e1007d52b8c02264990e0af61fa0e544cd760c78";
+const url = "https://api.pinata.cloud/pinning/pinFileToIPFS";
+const jsonUrl = "https://api.pinata.cloud/pinning/pinJSONToIPFS";
+
+
+
+
+
+
 
 
 const init = async() => {
@@ -56,23 +74,72 @@ mintBtn.addEventListener("click" ,() => {
         
     // call random number
 
-
+    randomNum = 137865134834567823676
     // slice them for dna to traits
+    let dna = randomNum.toString()
 
+    let SUS = dna.slice(0,3);
+    console.log(SUS % 100)
 
+    let Speed = dna.slice(3,6);
+    console.log(Speed % 100)
 
+    let Kill = dna.slice(6,9);
+    console.log(Kill % 100);
+
+    let Sabotage = dna.slice(9,12);
+    console.log(Sabotage % 100);
+
+    let BgColor = dna.slice(12, 15);
+    console.log(BgColor % 360);
     // create image
 
+    
+    fetch(
+      "https://gateway.pinata.cloud/ipfs/QmNoyrpvY2f6c4Ad4uyzPNSi72arXPB3eLzdqzVCCBboaF"
+    ).then(async (res) => {
+      let d = await res.blob();
+      console.log(d);
 
+      //use this blob to make new image
+
+
+
+
+
+      //upload updated image to ipfs
+      let data = new FormData();
+      data.append("file", d);
+      axios
+        .post(url, data, {
+          maxBodyLength: "Infinity", //this is needed to prevent axios from erroring out with large files
+          headers: {
+            "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
+            pinata_api_key: pinataApiKey,
+            pinata_secret_api_key: pinataSecretApiKey,
+          },
+        })
+        .then((response) => {
+          //handle response here
+          console.log(response.data);
+          console.log(
+            `image url = https://ipfs.io/ipfs/` + response.data.IpfsHash
+          );
+        });
+    });
+    
 
 
     //mint composable
 
 
+
+
     // choose background from dna
 
 
-
+    let Back = dna.slice(15, 18);
+    console.log(Back)
 
     //use rarible factory to make Background NFT
 

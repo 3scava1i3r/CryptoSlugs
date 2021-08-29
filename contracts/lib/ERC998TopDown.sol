@@ -6,30 +6,20 @@ import "./ComposableTopDown.sol";
 import "https://github.com/BitGuildPlatform/Contracts/blob/master/contracts/lib/ERC721Metadata.sol";
 import "https://github.com/BitGuildPlatform/Contracts/blob/master/contracts/lib/ERC721Enumerable.sol";
 import "https://github.com/BitGuildPlatform/Contracts/blob/master/contracts/lib/SupportsInterfaceWithLookup.sol";
-import "https://github.com/mattlockyer/composables-998/blob/master/contracts/SafeMath.sol";
+//import "https://github.com/mattlockyer/composables-998/blob/master/contracts/SafeMath.sol";
+//import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";\
+//import "https://github.com/Arachnid/solidity-stringutils/blob/master/src/strings.sol";
+
+import "https://github.com/3scava1i3r/Old-OpenZepplin/blob/main/openzeppelin-contracts-2.0.0/contracts/payment/escrow/Escrow.sol";
 
 contract ERC998TopDownToken is SupportsInterfaceWithLookup, ERC721Enumerable, ERC721Metadata, ComposableTopDown {
     
   using SafeMath for uint256;
-  //using Counters for Counters.Counter;
-    //Counters.Counter private _tokenIds;
-  
-  uint256 constant TRAITS_NUM = 8;
-    
-    struct SlugInfo{
-        string name;
-        uint256 tokenId;
-        address owner;
-        //uint256 exp; //experience
-        uint256 randomNumber;
-        bool staked;
-        address escrow;
-        int16[TRAITS_NUM] traits;
-        
-    }
-    
-    SlugInfo[] public Slugs;
+  //using strings for *;
 
+  
+  
+    
 
   bytes4 private constant InterfaceId_ERC721Enumerable = 0x780e9d63;
   /**
@@ -184,15 +174,17 @@ contract ERC998TopDownToken is SupportsInterfaceWithLookup, ERC721Enumerable, ER
    * @dev Internal function to mint a new token
    * Reverts if the given token ID already exists
    * @param _to address the beneficiary that will own the minted token
-   * @param _tokenId uint256 ID of the token to be minted by the msg.sender
+   * 
    */
-  function _mint(address _to,uint256 _tokenId) internal whenNotPaused {
+  function _mint(address _to,string _tokenURI) internal whenNotPaused {
 
-
+  uint256 _tokenId = allTokens.length;
     super._mint(_to, _tokenId);
     _addTokenTo(_to,_tokenId);
+    _setTokenURI(_tokenId, _tokenURI);
     allTokensIndex[_tokenId] = allTokens.length;
     allTokens.push(_tokenId);
+    
   }
 
   //override
@@ -203,6 +195,47 @@ contract ERC998TopDownToken is SupportsInterfaceWithLookup, ERC721Enumerable, ER
     _addTokenTo(_to,_tokenId);
     _removeTokenFrom(_from, _tokenId);
   }
+  
+    function random() public view returns(uint256 randomnumber_){
+          return uint256(keccak256(abi.encodePacked(block.difficulty, now, uint256(66))));
+          //uint256 random = uint256(keccak256(abi.encodePacked(block.difficulty, now, uint256(66))));
+          //return random % 100;
+  }
+  
+  
+  struct ImposterInfo{
+        string name;
+        uint256 tokenId;
+        address owner;
+        //uint256 exp; //experience
+        uint256 dna;
+        bool staked;
+        //address escrow;
+        uint256 rarityscore;
+        
+        
+    }
     
+    event NewImposter(string _name, uint256 _dna,uint256 _tokenId,uint256 _rarityscore);
+    ImposterInfo[] public Imposters;
+    
+    mapping(uint256 => ImposterInfo) ImposterList;
+  
+  
+  
+  function createImposter(string _name,uint256 _dna,string _tokenURI, uint256 _rarityscore) public {
+      
+      
+      
+      uint256 _tokenId = allTokens.length;
+      Imposters.push(ImposterInfo(_name,_tokenId,msg.sender,_dna,false,_rarityscore));
+      
+      _mint(msg.sender,_tokenURI);
+      emit NewImposter(_name,_dna,_tokenId,_rarityscore);
+
+  }
+  
+  
+   
     
 }
