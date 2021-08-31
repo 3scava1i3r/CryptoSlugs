@@ -3,6 +3,9 @@
 var web3btn = document.getElementById("web3connect");
 var acc = document.getElementById("acc");
 var mintBtn = document.getElementById("mint-button");
+
+var lwip = require("@randy.tarampi/lwip");
+
 var selectedACC;
 var name;
 var randomNum;
@@ -123,7 +126,7 @@ mintBtn.addEventListener("click", function () {
   console.log(BgColor % 360); // create image
 
   fetch("https://gateway.pinata.cloud/ipfs/QmNoyrpvY2f6c4Ad4uyzPNSi72arXPB3eLzdqzVCCBboaF").then(function _callee2(res) {
-    var d, data;
+    var d;
     return regeneratorRuntime.async(function _callee2$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
@@ -134,25 +137,31 @@ mintBtn.addEventListener("click", function () {
           case 2:
             d = _context4.sent;
             console.log(d); //use this blob to make new image
-            //upload updated image to ipfs
 
-            data = new FormData();
-            data.append("file", d);
-            axios.post(url, data, {
-              maxBodyLength: "Infinity",
-              //this is needed to prevent axios from erroring out with large files
-              headers: {
-                "Content-Type": "multipart/form-data; boundary=".concat(data._boundary),
-                pinata_api_key: pinataApiKey,
-                pinata_secret_api_key: pinataSecretApiKey
-              }
-            }).then(function (response) {
-              //handle response here
-              console.log(response.data);
-              console.log("image url = https://ipfs.io/ipfs/" + response.data.IpfsHash);
+            lwip.open('../assets/r.jpeg', function (e, image) {
+              image.scale(0.5, function (e, image) {
+                image.toBuffer('png', function (e, buffer) {
+                  //upload updated image to ipfs
+                  var data = new FormData();
+                  data.append("file", buffer);
+                  axios.post(url, data, {
+                    maxBodyLength: "Infinity",
+                    //this is needed to prevent axios from erroring out with large files
+                    headers: {
+                      "Content-Type": "multipart/form-data; boundary=".concat(data._boundary),
+                      pinata_api_key: pinataApiKey,
+                      pinata_secret_api_key: pinataSecretApiKey
+                    }
+                  }).then(function (response) {
+                    //handle response here
+                    console.log(response.data);
+                    console.log("image url = https://ipfs.io/ipfs/" + response.data.IpfsHash);
+                  });
+                });
+              });
             });
 
-          case 7:
+          case 5:
           case "end":
             return _context4.stop();
         }

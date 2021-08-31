@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "browserify": "^17.0.0",
+    "caman": "^4.1.2",
+    "jimp": "^0.16.1",
     "nft.storage": "^3.2.0"
   },
   "devDependencies": {
